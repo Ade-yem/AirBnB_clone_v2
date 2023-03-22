@@ -32,8 +32,6 @@ class DBStorage:
         
     def all(self, cls=None):
         """query on the current database session"""
-        Session = sessionmaker(bind=self.__engine)
-        self.__session = Session()
         result = {}
         if cls:
             if type(cls) == str:
@@ -41,14 +39,13 @@ class DBStorage:
             for cls_query in self.__session.query(cls):
                 key = f"{type(cls_query).__name__}.{cls_query.id}"
                 result[key] = cls_query
-            return result
         else:
             classes = [State, City, User, Place, Review, Amenity]
             for obj in classes:
                 for all_query in self.__session.query(obj):
                     key = f"{type(all_query).__name__}.{all_query.id}"
                     result[key] = all_query
-            return result
+        return result
 
     def new(self, obj):
         """ add the object to the current database session"""
@@ -69,11 +66,3 @@ class DBStorage:
         session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
-
-    
-
-    
-
-            
-
-
