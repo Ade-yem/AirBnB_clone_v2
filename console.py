@@ -129,8 +129,6 @@ class HBNBCommand(cmd.Cmd):
             if type(kv[1]) == str:
                 if '_' in kv[1]:
                     kv[1].replace('_', ' ')
-            elif '.' in kv[1]:
-                float(kv[1])
             try:
                 var = eval(kv[1])
                 kv[1] = var
@@ -139,9 +137,8 @@ class HBNBCommand(cmd.Cmd):
 
             setattr(new_instance, kv[0], kv[1])
 
-        storage.save()
+        new_instance.save()
         print(new_instance.id)
-        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -217,20 +214,20 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
         print_list = []
-        objects = storage.all()
 
         if args:
             args = args.split(' ')[0]  # remove possible trailing args
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
+            objects = storage.all(args)
             for k, v in objects.items():
                 if k.split('.')[0] == args:
                     print_list.append(str(v))
         else:
+            objects = storage.all()
             for k, v in objects.items():
                 print_list.append(str(v))
-
         print(print_list)
 
     def help_all(self):
