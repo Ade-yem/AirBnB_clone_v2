@@ -4,3 +4,5 @@ models/__pycache__/
 models/engine/__pycache__/
 test_params_create
 main_delete.py
+tests/test_models/test_engine/__pycache__/
+tests/test_models/__pycache__/
