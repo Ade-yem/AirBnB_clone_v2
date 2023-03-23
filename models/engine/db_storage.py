@@ -39,13 +39,14 @@ class DBStorage:
             for cls_query in self.__session.query(cls):
                 key = f"{type(cls_query).__name__}.{cls_query.id}"
                 result[key] = cls_query
+            return result
         else:
             classes = [State, City, User, Place, Review, Amenity]
             for obj in classes:
                 for all_query in self.__session.query(obj):
                     key = f"{type(all_query).__name__}.{all_query.id}"
                     result[key] = all_query
-        return result
+            return result
 
     def new(self, obj):
         """ add the object to the current database session"""
