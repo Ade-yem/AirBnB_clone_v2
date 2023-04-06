@@ -1,0 +1,13 @@
+#!/bin/bash
+echo type in the name of the file...
+read name
+echo creating file...
+touch $name
+echo adding permission...
+chmod u+x $name
+echo checking...
+ls -l $name
+echo adding python environment into file
+echo "#!/usr/bin/python3" >> $name
+echo opening the file
+emacs $name
