@@ -7,13 +7,15 @@ from datetime import datetime
 env.hosts = ['100.26.235.207', '54.86.208.71']
 env.user = 'ubuntu'
 
+
 def deploy():
     """ distributes the archive to the web servers"""
     try:
-        archive_path = do_pack() 
+        archive_path = do_pack()
     except Exception:
         return False
     return do_deploy(archive_path)
+
 
 def do_pack():
     """packs flies to an archive"""
@@ -27,9 +29,10 @@ def do_pack():
     except Exceptions:
         return None
 
+
 def do_deploy(archive_path):
     """Distribute an archive to web servers"""
-    
+
     if not exists(archive_path):
         return False
     try:
@@ -48,6 +51,5 @@ def do_deploy(archive_path):
         run("sudo ln -s {} /data/web_static/current".format(remote_path))
         print("New version deployed!")
         return True
-    except:
+    except Exception:
         return False
-
