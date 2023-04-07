@@ -5,7 +5,6 @@ from os.path import exists
 from datetime import datetime
 
 env.hosts = ['100.26.235.207', '54.86.208.71']
-env.user = 'ubuntu'
 
 def do_deploy(archive_path):
     """Distribute an archive to web servers"""
@@ -14,7 +13,6 @@ def do_deploy(archive_path):
 
     try:
         put(archive_path, "/tmp/")
-        
         # Create directory to uncompress the archive
         archive_file = archive_path.split("/")[-1]
         archive_name = archive_file.split(".")[0]
@@ -22,7 +20,6 @@ def do_deploy(archive_path):
         run("mkdir -p {}".format(remote_path))
         run("tar -xzf /tmp/{} -C {}".
             format(archive_file, remote_path))
-        
         run("rm /tmp/{}".format(archive_file))
         run("mv {}/web_static/* {}/".format(remote_path, remote_path))
         run("rm -rf {}/web_static".format(remote_path))
@@ -30,5 +27,5 @@ def do_deploy(archive_path):
         run("ln -s {} /data/web_static/current".format(remote_path))
         print("New version deployed!")
         return True
-    except:
+    except Exception:
         return False
