@@ -1,63 +1,63 @@
-# Install Nginx if not already installed
-class nginx {
-  package { 'nginx':
-    ensure => installed,
-  }
+# Setup the web servers for the deployment of web_static
+exec { '/usr/bin/env apt -y update' : }
+-> package { 'nginx':
+  ensure => installed,
 }
-
-# Create necessary directories
-file { ['/data', '/data/web_static', '/data/web_static/releases', '/data/web_static/shared', '/data/web_static/releases/test']:
-  ensure => 'directory',
-  owner  => 'ubuntu',
-  group  => 'ubuntu',
-  mode   => '0755',
+-> file { '/data':
+  ensure  => 'directory'
 }
-
-# Create test HTML file
-file { '/data/web_static/releases/test/index.html':
-  content => '<html><body>Holberton School Test Page</body></html>',
-  owner   => 'ubuntu',
-  group   => 'ubuntu',
-  mode    => '0644',
+-> file { '/data/web_static':
+  ensure => 'directory'
 }
-
-# Create symbolic link to current release
-file { '/data/web_static/current':
+-> file { '/data/web_static/releases':
+  ensure => 'directory'
+}
+-> file { '/data/web_static/releases/test':
+  ensure => 'directory'
+}
+-> file { '/data/web_static/shared':
+  ensure => 'directory'
+}
+-> file { '/data/web_static/releases/test/index.html':
+  ensure  => 'present',
+  content => "<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <body>
+    <p>Nginx server test</p>
+  </body>
+</html>"
+}
+-> file { '/data/web_static/current':
   ensure => 'link',
-  target => '/data/web_static/releases/test',
-  owner  => 'ubuntu',
-  group  => 'ubuntu',
+  target => '/data/web_static/releases/test'
 }
-
-# Update Nginx configuration
-class nginx_config {
-  include nginx
-
-  # Serve content from /data/web_static/current under the URI /hbnb_static
-  file { '/etc/nginx/sites-available/default':
-    content => "server {
-      listen 80 default_server;
-      listen [::]:80 default_server;
-
-      location /hbnb_static/ {
-        alias /data/web_static/current/;
-        index index.html;
-      }
-
-      location / {
-        add_header X-Served-By $hostname;
-      }
-    }",
-    require => Class['nginx'],
-    notify  => Service['nginx'],
-  }
+-> exec { 'chown -R ubuntu:ubuntu /data/':
+  path => '/usr/bin/:/usr/local/bin/:/bin/'
 }
-
-# Restart Nginx
-service { 'nginx':
-  ensure     => running,
-  enable     => true,
-  hasrestart => true,
-  require    => Class['nginx_config'],
+-> file { '/var/www':
+  ensure => 'directory'
 }
-
+-> file { '/var/www/html':
+  ensure => 'directory'
+}
+-> file { '/var/www/html/index.html':
+  ensure  => 'present',
+  content => "<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <body>
+    <p>Nginx server test</p>
+  </body>
+</html>"
+}
+exec { 'nginx_conf':
+  environment => ['data=\ \tlocation /hbnb_static {\n\t\talias /data/web_static/current;\n\t}\n'],
+  command     => 'sed -i "39i $data" /etc/nginx/sites-enabled/default',
+  path        => '/usr/bin:/usr/sbin:/bin:/usr/local/bin'
+}
+-> service { 'nginx':
+  ensure => running,
+}
