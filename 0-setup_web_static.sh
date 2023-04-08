@@ -10,7 +10,7 @@ bash -c "cat <<EOF > /data/web_static/releases/test/index.html
   <head>
   </head>
   <body>
-    ALX School
+    Holberton School
   </body>
 </html>
 EOF"
