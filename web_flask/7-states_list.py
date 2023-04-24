@@ -13,6 +13,7 @@ def show_states():
     objs = storage.all("State")
     return render_template("7-states_list.html", objs=objs)
 
+
 @app.teardown_appcontext
 def close(exception):
     """remove current db session"""
