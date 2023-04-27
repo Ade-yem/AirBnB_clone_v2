@@ -3,7 +3,8 @@
 	justify-content: center;
 	flex-wrap: wrap;
 	margin: 45px auto;
-	text-align: center;
+	/* text-align: center; */
+	z-index: 1;
 }
 
 article {
@@ -13,13 +14,11 @@ article {
 	flex-wrap: wrap;
 	flex-direction: row;
 	align-content: flex-start;
-
 	padding-top: 10px;
 	padding-right: 20px;
 	padding-left: 20px;
 	padding-bottom: 20px;
 	margin: 20px;
-
 	border: 1px solid #FF5A5F;
 	border-radius: 4px;
 }
@@ -27,20 +26,25 @@ article {
 .headline {
 	display: flex;
 	flex-direction: row;
+	justify-content: space-between;
 	position: relative;
-
-	height: 80px;	
+	height: fit-content;	
 	width: 100%;
+}
+.headline > h2{
+	font-size: 22x;
+	justify-self: flex-start;
+	flex-wrap: wrap;
+	width: 80%;
+	margin-left: -5px;
 }
 
 .price_by_night {
 	display: flex;
 	justify-content: center;
 	align-self: flex-end;
-
 	position: absolute;
 	right: 0;
-
 	line-height: 60px;
 	color: #FF5A5F;
 	font-size: 30px;
